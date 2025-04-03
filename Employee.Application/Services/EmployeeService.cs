@@ -20,6 +20,14 @@ namespace Employee.Application.Services
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
+
+                int maxId = 0;
+                using (var command = new SqlCommand("SELECT ISNULL(MAX(CAST(SUBSTRING(EmployeeCode, 4, LEN(EmployeeCode) - 3) AS INT)), 0) FROM Employees", connection))
+                {
+                    var result = await command.ExecuteScalarAsync();
+                    maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
+                }
+
                 using (var bulkCopy = new SqlBulkCopy(connection))
                 {
                     bulkCopy.DestinationTableName = "Employees";
@@ -34,7 +42,9 @@ namespace Employee.Application.Services
 
                     foreach (var employee in employees)
                     {
-                        dataTable.Rows.Add(employee.EmployeeCode, employee.Name, employee.BirthDate);
+                        maxId++;
+                        string employeeCode = "NV_" + maxId;
+                        dataTable.Rows.Add(employeeCode, employee.Name, employee.BirthDate);
                     }
 
                     await bulkCopy.WriteToServerAsync(dataTable);

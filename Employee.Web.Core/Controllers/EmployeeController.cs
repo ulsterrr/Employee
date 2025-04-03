@@ -75,10 +75,10 @@ namespace Employee.Web.Core.Controllers
                         {
                             employees.Add(new EmployeeDto
                             {
-                                EmployeeCode = worksheet.Cells[row, 2].Text,
-                                Name = worksheet.Cells[row, 3].Text,
-                                BirthDate = DateTime.Parse(worksheet.Cells[row, 4].Text),
-                                Age = (int)((DateTime.Now - DateTime.Parse(worksheet.Cells[row, 4].Text)).TotalDays / 365.25)
+                                EmployeeCode = "",
+                                Name = worksheet.Cells[row, 2].Text,
+                                BirthDate = DateTime.Parse(worksheet.Cells[row, 3].Text),
+                                Age = (int)((DateTime.Now - DateTime.Parse(worksheet.Cells[row, 3].Text)).TotalDays / 365.25)
                             });
 
                             if (employees.Count % 1000 == 0)
